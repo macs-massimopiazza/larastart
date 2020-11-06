@@ -23,5 +23,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Route::get("/questions/{id}", [QuestionController::class, "show"]);
 // Route::post("/questions", [QuestionController::class, "add"]);
 
-Route::get("/list", [QuestionController::class, "showList"]);
-Route::get("/random", [QuestionController::class, "getRandom"]);
+Route::get("/questions", [QuestionController::class, "showList"]);
+Route::get("/questions/random", [QuestionController::class, "getRandom"]);
