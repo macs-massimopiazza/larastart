@@ -1,0 +1,98 @@
+Comandi per inizializzare progetti laravel e vue
+(bisigna avere composter, php, node.js)
+
+Legenda:
+$ = codice scritto in linea di comandao
+// = indicazioni
+Il resto delle linee di codice sono scritte dentro file laravel
+
+//INSTALLA composer
+//CREA FILE .bashrc in /c/users/nome_utente
+//qua inserire gli alias: 'alias php="/c/xampp/php/php.exe" alias composer="/c/xampp/php/php.exe /c/xampp/php/composer.phar"'
+
+//CREO PROGETTO LARAVEL comando-per-creare-progetto | nome progetto(nome/repository) | composer installa da dist | directory di destinazione 
+$ composer create-project laravel/laravel --prefer-dist server 
+
+//CREIAMO PROGETTO VUE - dopo aver installato la CLi di vue  con: $ npm install -g @vue/cli
+//vue comandp-per-creare-progetto | directory di destinazione
+$ vue create client
+//verranno fuori delle opzioni, scegliere la prima 'default'
+
+//FAR PARTIRE SERVER DI LARAVEL - andiamo dentro la cartella server
+$ php artisan serve
+
+//COMUNICHIAMO COL DATABASE - in server/.env (dobbiamo avere gia xampp con un database nuovo "nomeDatabase")
+DB_DATABASE = nomeDatabase
+
+//CREARE MIGRAZIONE - con create_nomeTabella laravel crea un file di migrazione per creare una nuova tabella
+$ php artisan make:migration creare_nomeTabella
+
+//VEDERE LO STATO DELLE MIGRAZIONI
+$ php artisan migrate:status
+
+//TORNARE INDIETRO NELLE MIGRAZIONI
+$ php artisan migrate:rollback
+
+//AGGIUNGERE E MODIFICARE COLONNE TABELLA IN FILE DI MIGRAZIONE - dentro al nostro file di migrazione 
+public function up()
+    {
+        Schema::create('questions', function (Blueprint $table) {
+            //qua modifichiamo e aggiungiamo le colonne
+            $table->id();
+            $table->string("question");
+            $table->timestamps();
+    });
+}
+
+//MIGRARE AL DB MIGRAZIONI ESISTENTI PER CREARE TABELLE - possiamo vedere i file di migrazione in server/database/migrations
+$ php artisan migrate
+
+//CREARE UN MODEL - il model aka modello è la rappresentazione i codice di una tabella del DATABASE
+//cosi possiamo manipolare le tabelle del database con gli oggetti php e non più con le query
+$ php artisan make:model NomeModello
+//i model li troviamo in server/app/Models - NomeModello deve essere il nome della tabella db al singolare con la lettere maiuscola
+
+//IMPORTARE IL MODELLO NEI VARI FILE DI LARAVEL - es. nel controller per prendere dati dal db con le funzioni del controller
+use App/Models/NomeController
+//ora nel file del model (app/model/NomeModello) possiamo
+
+//COME MODIFICARE CAMPI TABELLA DATABASE CON MODEL - utilizzando gli oggetti 
+$nomeOggetto = new nomeOggetto() 
+$nomeOggetto->colonnaTabella = "quello che verrà inserito nel campo della tabella"
+$nomeOggetto->save() //salva il nostro dato dentro al database
+
+//RECUPERARE CAMPO TABELLA DATABASE CON MODEL - query con i modelli
+//creiamo un builder
+NomeModello::where('nome_colonna_tabella', 'operatore', valore di riferimento)
+es. Question::where('id', '=', 4)
+//chiamiamo il metodo get su questo builder per eseguire la query
+NomeModello::where('nome_colonna_tabella', 'operatore', valore di riferimento)->get()
+
+-- ALTRI COMANDI BASE UTILI --
+
+//CREIAMO ROUTE - le route si creano in server/app/route/api.php
+Route::get("/nome_route", [NomeController::class, "funzione_nel_controller_da_richiamare"])
+
+//CREA CONTROLLER - i controller li troviamo in server/app/http
+$ php artisan make:controller NomeController
+
+//COLLEGHIAMO CONTROLLER NELLE ROUTE - se non ce lo collega da solo con l'autocompletamento - dentro server/app/route/api.php
+use App/Http/NomeController
+
+//CREIAMO UNA FUNZIONE ALL'INTERNO DI UNA CLASSE NEL CONTROLLER - in server/app/http/NomeController.php
+//dentro a 'class NomeController extends Controller{}
+public function funzione_nel_controller_da_richiamare() {
+    
+}
+
+//RISPONDERE DENTRO LA FUNZIONE 
+public function funzione_nel_controller_da_richiamare() {
+    return cosa_ritornare; 
+    //oppure 
+    return response(cosa_ritornare, codice)
+}
+//cosa_ritornare piò essere una stronga, un array, un oggeto o un oggetto di array
+
+
+
+
